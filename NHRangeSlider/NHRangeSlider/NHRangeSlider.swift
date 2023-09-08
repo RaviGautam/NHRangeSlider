@@ -150,19 +150,16 @@ open class NHRangeSlider: UIControl {
     
     
     /// stepValue. If set, will snap to discrete step points along the slider . Default to nil
-    @IBInspectable open var stepValue: Double? = nil {
+    @IBInspectable open var stepValue: Double = 0.0 {
         willSet(newValue) {
             if newValue != nil {
-                assert(newValue! > 0, "NHRangeSlider: stepValue must be positive")
+                assert(newValue > 0, "NHRangeSlider: stepValue must be positive")
             }
         }
         didSet {
-            if let val = stepValue {
-                if val <= 0 {
-                    stepValue = nil
-                }
+            if stepValue <= 0 {
+                stepValue = 0.0
             }
-            
             updateLayerFrames()
         }
     }
@@ -255,7 +252,7 @@ open class NHRangeSlider: UIControl {
     }
     
     //MARK: init methods
-    override public init(frame: CGRect) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
         initializeLayers()
     }
@@ -403,7 +400,7 @@ open class NHRangeSlider: UIControl {
         upperThumbLayer.highlighted = false
         
         // let slider snap after user stop dragging
-        if let stepValue = stepValue {
+        if stepValue > 0 {
             lowerValue = round(lowerValue / stepValue) * stepValue
             upperValue = round(upperValue / stepValue) * stepValue
             sendActions(for: .valueChanged)
